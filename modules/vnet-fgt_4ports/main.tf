@@ -110,10 +110,10 @@ resource "azurerm_public_ip" "passive-mgmt-ip" {
 #----------------------------------------------------------------------------------
 // Active FGT Network Interface
 resource "azurerm_network_interface" "ni-active-ha" {
-  name                          = "${var.prefix}-ni-active-ha"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-active-ha"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -125,10 +125,10 @@ resource "azurerm_network_interface" "ni-active-ha" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-active-mgmt" {
-  name                          = "${var.prefix}-ni-active-mgmt"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-active-mgmt"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -142,11 +142,11 @@ resource "azurerm_network_interface" "ni-active-mgmt" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-active-public" {
-  name                          = "${var.prefix}-ni-active-public"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-active-public"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -159,11 +159,11 @@ resource "azurerm_network_interface" "ni-active-public" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-active-private" {
-  name                          = "${var.prefix}-ni-active-private"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-active-private"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -177,10 +177,10 @@ resource "azurerm_network_interface" "ni-active-private" {
 
 // Passive FGT Network Interface port1
 resource "azurerm_network_interface" "ni-passive-ha" {
-  name                          = "${var.prefix}-ni-passive-ha"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-passive-ha"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -192,10 +192,10 @@ resource "azurerm_network_interface" "ni-passive-ha" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-passive-mgmt" {
-  name                          = "${var.prefix}-ni-passive-mgmt"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-passive-mgmt"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -209,11 +209,11 @@ resource "azurerm_network_interface" "ni-passive-mgmt" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-passive-public" {
-  name                          = "${var.prefix}-ni-passive-public"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-passive-public"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -226,11 +226,11 @@ resource "azurerm_network_interface" "ni-passive-public" {
   tags = var.tags
 }
 resource "azurerm_network_interface" "ni-passive-private" {
-  name                          = "${var.prefix}-ni-passive-private"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = "${var.prefix}-ni-passive-private"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"

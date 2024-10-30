@@ -23,7 +23,7 @@ locals {
   fgt-1_ni_mgmt_name    = "${var.prefix}-ni-active-mgmt"
   fgt-1_ni_public_name  = "${var.prefix}-ni-active-public"
   fgt-1_ni_private_name = "${var.prefix}-ni-active-private"
-  
+
   fgt-2_ni_mgmt_name    = "${var.prefix}-ni-passive-mgmt"
   fgt-2_ni_public_name  = "${var.prefix}-ni-passive-public"
   fgt-2_ni_private_name = "${var.prefix}-ni-passive-private"

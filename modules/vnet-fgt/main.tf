@@ -100,10 +100,10 @@ resource "azurerm_public_ip" "passive-mgmt-ip" {
 
 // Active FGT Network Interface MGMT
 resource "azurerm_network_interface" "ni-active-mgmt" {
-  name                          = local.fgt-1_ni_mgmt_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = local.fgt-1_ni_mgmt_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -118,12 +118,12 @@ resource "azurerm_network_interface" "ni-active-mgmt" {
 }
 // Active FGT Network Interface Public (with public IP SDN connector)
 resource "azurerm_network_interface" "ni-active-public_sdn" {
-  count                         = var.config_xlb ? 0 : 1
-  name                          = local.fgt-1_ni_public_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  count                          = var.config_xlb ? 0 : 1
+  name                           = local.fgt-1_ni_public_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -137,12 +137,12 @@ resource "azurerm_network_interface" "ni-active-public_sdn" {
 }
 // Active FGT Network Interface Public (without public IP External LB)
 resource "azurerm_network_interface" "ni-active-public_xlb" {
-  count                         = var.config_xlb ? 1 : 0
-  name                          = local.fgt-1_ni_public_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  count                          = var.config_xlb ? 1 : 0
+  name                           = local.fgt-1_ni_public_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -155,11 +155,11 @@ resource "azurerm_network_interface" "ni-active-public_xlb" {
 }
 // Active FGT Network Interface Private
 resource "azurerm_network_interface" "ni-active-private" {
-  name                          = local.fgt-1_ni_private_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = local.fgt-1_ni_private_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -172,10 +172,10 @@ resource "azurerm_network_interface" "ni-active-private" {
 }
 // Passive FGT Network Interface MGMT
 resource "azurerm_network_interface" "ni-passive-mgmt" {
-  name                          = local.fgt-2_ni_mgmt_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_accelerated_networking = var.accelerate
+  name                           = local.fgt-2_ni_mgmt_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -190,12 +190,12 @@ resource "azurerm_network_interface" "ni-passive-mgmt" {
 }
 // Passive FGT Network Interface Public (with public IP SDN connector)
 resource "azurerm_network_interface" "ni-passive-public_fgsp" {
-  count                         = var.config_xlb ? 0 : 1
-  name                          = local.fgt-2_ni_public_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  count                          = var.config_xlb ? 0 : 1
+  name                           = local.fgt-2_ni_public_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -209,12 +209,12 @@ resource "azurerm_network_interface" "ni-passive-public_fgsp" {
 }
 // Passive FGT Network Interface Public (without public IP External LB)
 resource "azurerm_network_interface" "ni-passive-public_xlb" {
-  count                         = var.config_xlb ? 1 : 0
-  name                          = local.fgt-2_ni_public_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  count                          = var.config_xlb ? 1 : 0
+  name                           = local.fgt-2_ni_public_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -227,11 +227,11 @@ resource "azurerm_network_interface" "ni-passive-public_xlb" {
 }
 // Passive FGT Network Interface Private
 resource "azurerm_network_interface" "ni-passive-private" {
-  name                          = local.fgt-2_ni_private_name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  enable_ip_forwarding          = true
-  enable_accelerated_networking = var.accelerate
+  name                           = local.fgt-2_ni_private_name
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  ip_forwarding_enabled          = true
+  accelerated_networking_enabled = var.accelerate
 
   ip_configuration {
     name                          = "ipconfig1"
