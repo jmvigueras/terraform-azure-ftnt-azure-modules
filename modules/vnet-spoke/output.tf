@@ -8,7 +8,7 @@ output "vnet_name" {
 }
 
 output "vnet_cidr" {
-  value = azurerm_virtual_network.vnet-spoke.address_space[0]
+  value = var.vnet_spoke_cidr
 }
 
 output "subnet_ids" {

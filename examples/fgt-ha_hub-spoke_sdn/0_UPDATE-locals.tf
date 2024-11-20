@@ -22,7 +22,7 @@ locals {
 
   license_type = "payg"
   fgt_size     = "Standard_F4s"
-  fgt_version  = "7.2.5"
+  fgt_version  = "7.4.5"
 
   #-----------------------------------------------------------------------------------------------------
   # FGT HUB
@@ -42,6 +42,7 @@ locals {
       dpd_retryinterval = "5"
       mode_cfg          = true
       vpn_port          = "public"
+      local_gw          = ""
     }
   ]
 

@@ -7,7 +7,7 @@
 ###################################################################
 module "fgt_hub_config" {
   depends_on = [module.xlb, module.fgt_hub_vnet, module.rs]
-  source     = "../../fgt-config"
+  source     = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -40,7 +40,7 @@ module "fgt_hub_config" {
 // (Example with a full scenario deployment with all modules)
 module "fgt_hub" {
   depends_on = [module.fgt_hub_config]
-  source     = "../../fgt-ha"
+  source     = "../../modules/fgt-ha"
 
   prefix                   = "${local.prefix}-hub"
   location                 = local.location
@@ -61,7 +61,7 @@ module "fgt_hub" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_hub_vnet" {
-  source = "../../vnet-fgt_v2"
+  source = "../../modules/vnet-fgt"
 
   prefix              = "${local.prefix}-hub"
   location            = local.location
@@ -77,7 +77,7 @@ module "fgt_hub_vnet" {
 // Create load balancers
 module "xlb" {
   depends_on = [module.fgt_hub_vnet]
-  source     = "../../xlb"
+  source     = "../../modules/xlb"
 
   prefix              = local.prefix
   location            = local.location
@@ -107,7 +107,7 @@ module "xlb" {
 // Module create vWAN and vHUB
 module "vwan" {
   depends_on = [module.vhub_vnet-spoke, module.fgt_hub_vnet]
-  source     = "../../vwan"
+  source     = "../../modules/vwan"
 
   prefix              = local.prefix
   location            = local.location
@@ -125,7 +125,7 @@ module "vwan" {
 // - This module will generate VNET spoke to connecto to vHUB 
 module "vhub_vnet-spoke" {
   count  = length(local.vhub_vnet-spoke_cidrs)
-  source = "../../vnet-spoke_v2"
+  source = "../../modules/vnet-spoke"
 
   prefix              = "${local.prefix}-vhub-${count.index + 1}"
   location            = local.location
@@ -141,7 +141,7 @@ module "vhub_vnet-spoke" {
 module "fgt_hub_vnet-spoke" {
   depends_on = [module.fgt_hub_vnet]
   count      = length(local.hub_vnet-spoke_cidrs)
-  source     = "../../vnet-spoke_v2"
+  source     = "../../modules/vnet-spoke"
 
   prefix              = "${local.prefix}-fgt-${count.index + 1}"
   location            = local.location
@@ -154,7 +154,7 @@ module "fgt_hub_vnet-spoke" {
 // Create Azure Router Servers
 module "rs" {
   depends_on = [module.fgt_hub_vnet-spoke, module.fgt_hub_vnet]
-  source     = "../../routeserver"
+  source     = "../../modules/routeserver"
 
   prefix              = local.prefix
   location            = local.location
@@ -169,7 +169,7 @@ module "rs" {
 // Create virtual machines
 module "vm_fgt_hub_vnet-spoke" {
   count  = length(module.fgt_hub_vnet-spoke)
-  source = "../../new-vm_rsa-ssh_v2"
+  source = "../../modules/vm"
 
   prefix                   = "${local.prefix}-spoke-fgt-${count.index + 1}"
   location                 = local.location
@@ -185,7 +185,7 @@ module "vm_fgt_hub_vnet-spoke" {
 // Create VM in spoke vNet
 module "vm_vhub_vnet-spoke" {
   count  = length(module.vhub_vnet-spoke)
-  source = "../../new-vm_rsa-ssh_v2"
+  source = "../../modules/vm"
 
   prefix                   = "${local.prefix}-spoke-vhub-${count.index + 1}"
   location                 = local.location

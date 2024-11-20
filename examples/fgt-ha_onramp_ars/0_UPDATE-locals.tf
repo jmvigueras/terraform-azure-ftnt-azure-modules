@@ -16,8 +16,8 @@ locals {
   # FGT
   #-----------------------------------------------------------------------------------------------------
   license_type = "payg"
-  fgt_size     = "Standard_F4"
-  fgt_version  = "latest"
+  fgt_size     = "Standard_F4s"
+  fgt_version  = "7.4.5"
 
   admin_username = "azureadmin"
   admin_password = "Terraform123#"
@@ -27,7 +27,7 @@ locals {
   fgt_bgp-asn   = "65000"
   fgt_vnet_cidr = "172.30.0.0/23"
 
-  fgt_vnet-spoke_cidrs = ["172.30.18.0/23"]
+  fgt_vnet_spoke_cidr = "172.30.18.0/23"
 }
 
 

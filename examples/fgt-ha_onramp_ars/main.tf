@@ -6,7 +6,7 @@
 # - Create LB
 #------------------------------------------------------------------
 module "fgt_config" {
-  source = "../../fgt-config"
+  source = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -40,7 +40,7 @@ module "fgt_config" {
 // Create FGT cluster spoke
 // (Example with a full scenario deployment with all modules)
 module "fgt" {
-  source = "../../fgt-ha"
+  source = "../../modules/fgt-ha"
 
   prefix                   = local.prefix
   location                 = local.location
@@ -65,7 +65,7 @@ module "fgt" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_vnet" {
-  source = "../../vnet-fgt"
+  source = "../../modules/vnet-fgt"
 
   prefix              = local.prefix
   location            = local.location
@@ -82,15 +82,15 @@ module "fgt_vnet" {
 // - Module will peer VNET to VNET FGT
 module "vnet-spoke-fgt" {
   depends_on = [module.fgt_vnet]
-  source     = "../../vnet-spoke"
+  source     = "../../modules/vnet-spoke"
 
   prefix              = "${local.prefix}-fgt"
   location            = local.location
   resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
   tags                = local.tags
 
-  vnet-spoke_cidrs = local.fgt_vnet-spoke_cidrs
-  vnet-fgt = {
+  vnet_spoke_cidr = local.fgt_vnet_spoke_cidr
+  vnet_fgt = {
     id   = module.fgt_vnet.vnet["id"]
     name = module.fgt_vnet.vnet["name"]
   }
@@ -99,14 +99,14 @@ module "vnet-spoke-fgt" {
 // Create Azure Route Servers
 module "rs" {
   depends_on = [module.vnet-spoke-fgt, module.fgt_vnet]
-  source     = "../../routeserver"
+  source     = "../../modules/routeserver"
 
   prefix              = local.prefix
   location            = local.location
   resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
   tags                = local.tags
 
-  subnet_ids   = module.vnet-spoke-fgt.subnet_ids["routeserver"]
+  subnet_ids   = [module.vnet-spoke-fgt.subnet_ids["routeserver"]]
   fgt_bgp-asn  = local.fgt_bgp-asn
   fgt1_peer-ip = module.fgt_vnet.fgt-active-ni_ips["private"]
   fgt2_peer-ip = module.fgt_vnet.fgt-passive-ni_ips["private"]
@@ -114,7 +114,7 @@ module "rs" {
 
 // Create virtual machines
 module "vm_vnet-spoke-fgt" {
-  source = "../../new-vm_rsa-ssh"
+  source = "../../modules/vm"
 
   prefix                   = "${local.prefix}-spoke-fgt"
   location                 = local.location
@@ -124,8 +124,6 @@ module "vm_vnet-spoke-fgt" {
   admin_username           = local.admin_username
   rsa-public-key           = tls_private_key.ssh.public_key_openssh
 
-  vm_ni_ids = [
-    module.vnet-spoke-fgt.ni_ids["subnet1"][0],
-    module.vnet-spoke-fgt.ni_ids["subnet2"][0]
-  ]
+  subnet_id   = module.vnet-spoke-fgt.subnet_ids["subnet_1"]
+  subnet_cidr = module.vnet-spoke-fgt.subnet_cidrs["subnet_1"]
 }

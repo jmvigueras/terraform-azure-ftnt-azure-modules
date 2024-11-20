@@ -7,7 +7,7 @@
 # - vxlan interfaces to connecto to GWLB
 #------------------------------------------------------------------
 module "fgt_spoke_config" {
-  source = "../../fgt-config"
+  source = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -35,7 +35,7 @@ module "fgt_spoke_config" {
 // Create FGT cluster spoke
 // (Example with a full scenario deployment with all modules)
 module "fgt_spoke" {
-  source = "../../fgt-ha"
+  source = "../../modules/fgt-ha"
 
   prefix                   = "${local.prefix}-spoke"
   location                 = local.location
@@ -55,7 +55,7 @@ module "fgt_spoke" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_spoke_vnet" {
-  source = "../../vnet-fgt"
+  source = "../../modules/vnet-fgt"
 
   prefix              = "${local.prefix}-spoke"
   location            = local.location
@@ -69,7 +69,7 @@ module "fgt_spoke_vnet" {
 
 // Create VM in spoke vNet
 module "vm_fgt_spoke_bastion" {
-  source = "../../new-vm_rsa-ssh_v2"
+  source = "../../modules/vm"
 
   prefix                   = "${local.prefix}-spoke-vhub"
   location                 = local.location

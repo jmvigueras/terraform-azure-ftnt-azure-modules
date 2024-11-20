@@ -6,7 +6,7 @@
 # - Create FMG and FAZ instances
 #------------------------------------------------------------------
 module "fgt_config" {
-  source = "../../fgt-config"
+  source = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -19,11 +19,11 @@ module "fgt_config" {
 
   # Config for SDN connector
   # - API calls (optional)
-  subscription_id = var.subscription_id
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  tenant_id       = var.tenant_id
-  resource_group_name  = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
+  subscription_id     = var.subscription_id
+  client_id           = var.client_id
+  client_secret       = var.client_secret
+  tenant_id           = var.tenant_id
+  resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
   # -
 
   config_fgcp = true
@@ -38,7 +38,7 @@ module "fgt_config" {
 // Create FGT cluster spoke
 // (Example with a full scenario deployment with all modules)
 module "fgt" {
-  source = "../../fgt-ha"
+  source = "../../modules/fgt-ha"
 
   prefix                   = local.prefix
   location                 = local.location
@@ -61,7 +61,7 @@ module "fgt" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_vnet" {
-  source = "../../vnet-fgt"
+  source = "../../modules/vnet-fgt"
 
   prefix              = "${local.prefix}-spoke"
   location            = local.location
@@ -78,7 +78,7 @@ module "fgt_vnet" {
 #------------------------------------------------------------------------------
 // Create FAZ instances
 module "faz" {
-  source = "../../faz"
+  source = "../../modules/faz"
 
   prefix                   = local.prefix
   location                 = local.location
@@ -105,7 +105,7 @@ module "faz" {
 }
 // Create FMG instances
 module "fmg" {
-  source = "../../fmg"
+  source = "../../modules/fmg"
 
   prefix                   = local.prefix
   location                 = local.location

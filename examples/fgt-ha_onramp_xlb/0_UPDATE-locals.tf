@@ -20,8 +20,8 @@ locals {
   admin_password = "Terraform123#"
 
   license_type  = "payg"
-  fgt_size      = "Standard_F4"
-  fgt_version   = "latest"
+  fgt_size      = "Standard_F4s"
+  fgt_version   = "7.4.5"
   fgt_vnet_cidr = "172.30.0.0/23"
 
   #-----------------------------------------------------------------------------------------------------

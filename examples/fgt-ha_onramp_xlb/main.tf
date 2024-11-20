@@ -6,7 +6,7 @@
 # - Create LB
 #------------------------------------------------------------------
 module "fgt_config" {
-  source = "../../fgt-config"
+  source = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -33,7 +33,7 @@ module "fgt_config" {
 // Create FGT cluster spoke
 // (Example with a full scenario deployment with all modules)
 module "fgt" {
-  source = "../../fgt-ha"
+  source = "../../modules/fgt-ha"
 
   prefix                   = local.prefix
   location                 = local.location
@@ -58,7 +58,7 @@ module "fgt" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_vnet" {
-  source = "../../vnet-fgt_v2"
+  source = "../../modules/vnet-fgt"
 
   prefix              = local.prefix
   location            = local.location
@@ -75,7 +75,7 @@ module "fgt_vnet" {
 // Create load balancers
 module "xlb" {
   depends_on = [module.fgt_vnet]
-  source     = "../../xlb"
+  source     = "../../modules/xlb"
 
   prefix              = local.prefix
   location            = local.location

@@ -19,8 +19,8 @@ locals {
   # FGT
   #-----------------------------------------------------------------------------------------------------
   fgt_license_type = "payg"
-  fgt_size         = "Standard_F4"
-  fgt_version      = "latest"
+  fgt_size         = "Standard_F4s"
+  fgt_version       = "7.4.5"
 
   admin_port = "8443"
   admin_cidr = "${chomp(data.http.my-public-ip.response_body)}/32"

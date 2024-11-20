@@ -7,7 +7,7 @@
 # - vxlan interfaces to connecto to GWLB
 ###################################################################
 module "fgt_hub_config" {
-  source     = "../../fgt-config"
+  source     = "../../modules/fgt-config"
 
   admin_cidr     = local.admin_cidr
   admin_port     = local.admin_port
@@ -37,7 +37,7 @@ module "fgt_hub_config" {
 // (Example with a full scenario deployment with all modules)
 module "fgt_hub" {
   depends_on = [module.fgt_hub_config]
-  source     = "../../fgt-ha"
+  source     = "../../modules/fgt-ha"
 
   prefix                   = "${local.prefix}-hub"
   location                 = local.location
@@ -59,7 +59,7 @@ module "fgt_hub" {
 // Module VNET for FGT
 // - This module will generate VNET and network intefaces for FGT cluster
 module "fgt_hub_vnet" {
-  source = "../../vnet-fgt_v2"
+  source = "../../modules/vnet-fgt"
 
   prefix              = "${local.prefix}-hub"
   location            = local.location
@@ -75,7 +75,7 @@ module "fgt_hub_vnet" {
 
 // Create load balancers
 module "xlb" {
-  source     = "../../xlb"
+  source     = "../../modules/xlb"
 
   prefix              = local.prefix
   location            = local.location
