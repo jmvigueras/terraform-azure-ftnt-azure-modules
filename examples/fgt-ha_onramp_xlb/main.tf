@@ -2,16 +2,16 @@
 # Create FGT HUB 
 # - Create cluster FGCP config
 # - Create FGCP instances
-# - Create vNet
+# - Create VNet
 # - Create LB
 #------------------------------------------------------------------
 module "fgt_config" {
   source = "../../modules/fgt-config"
 
-  admin_cidr     = local.admin_cidr
-  admin_port     = local.admin_port
+  admin_cidr     = var.admin_cidr
+  admin_port     = var.admin_port
   rsa-public-key = tls_private_key.ssh.public_key_openssh
-  api_key        = random_string.api_key.result
+  api_key        = var.fgt_api_key_enabled ? random_string.api_key.result : ""
 
   subnet_cidrs       = module.fgt_vnet.subnet_cidrs
   fgt-active-ni_ips  = module.fgt_vnet.fgt-active-ni_ips
@@ -19,11 +19,11 @@ module "fgt_config" {
 
   # Config for SDN connector
   # - API calls (optional)
-  subscription_id     = var.subscription_id
-  client_id           = var.client_id
-  client_secret       = var.client_secret
-  tenant_id           = var.tenant_id
-  resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
+  #subscription_id     = var.subscription_id
+  #client_id           = var.client_id
+  #client_secret       = var.client_secret
+  #tenant_id           = var.tenant_id
+  #resource_group_name = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
   # -
 
   config_fgcp    = true
@@ -35,13 +35,13 @@ module "fgt_config" {
 module "fgt" {
   source = "../../modules/fgt-ha"
 
-  prefix                   = local.prefix
-  location                 = local.location
-  resource_group_name      = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
-  tags                     = local.tags
-  storage-account_endpoint = local.storage-account_endpoint == null ? azurerm_storage_account.storageaccount[0].primary_blob_endpoint : local.storage-account_endpoint
+  prefix                   = var.prefix
+  location                 = var.location
+  resource_group_name      = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
+  tags                     = var.tags
+  storage-account_endpoint = var.storage-account_endpoint == null ? azurerm_storage_account.storageaccount[0].primary_blob_endpoint : var.storage-account_endpoint
 
-  admin_username = local.admin_username
+  admin_username = var.admin_username
   admin_password = local.admin_password
 
   fgt-active-ni_ids  = module.fgt_vnet.fgt-active-ni_ids
@@ -50,9 +50,9 @@ module "fgt" {
   fgt_config_2       = module.fgt_config.fgt_config_2
 
   fgt_passive  = true
-  license_type = local.license_type
-  fgt_version  = local.fgt_version
-  size         = local.fgt_size
+  license_type = var.license_type
+  fgt_version  = var.fgt_version
+  size         = var.fgt_size
 }
 
 // Module VNET for FGT
@@ -60,14 +60,14 @@ module "fgt" {
 module "fgt_vnet" {
   source = "../../modules/vnet-fgt"
 
-  prefix              = local.prefix
-  location            = local.location
-  resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
-  tags                = local.tags
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
+  tags                = var.tags
 
-  vnet-fgt_cidr = local.fgt_vnet_cidr
-  admin_port    = local.admin_port
-  admin_cidr    = local.admin_cidr
+  vnet-fgt_cidr = var.fgt_vnet_cidr
+  admin_port    = var.admin_port
+  admin_cidr    = var.admin_cidr
 
   config_xlb = true // module variable to associate a public IP to fortigate's public interface (when using External LB, true means not to configure a public IP)
 }
@@ -77,14 +77,14 @@ module "xlb" {
   depends_on = [module.fgt_vnet]
   source     = "../../modules/xlb"
 
-  prefix              = local.prefix
-  location            = local.location
-  resource_group_name = local.resource_group_name == null ? azurerm_resource_group.rg[0].name : local.resource_group_name
-  tags                = local.tags
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
+  tags                = var.tags
 
   config_gwlb        = local.config_gwlb
   ilb_ip             = local.ilb_ip
-  backend-probe_port = local.backend-probe_port
+  backend-probe_port = local.backend_probe_port
 
   vnet-fgt           = module.fgt_vnet.vnet
   subnet_ids         = module.fgt_vnet.subnet_ids
@@ -94,3 +94,64 @@ module "xlb" {
 }
 
 
+
+#-----------------------------------------------------------------------
+# Necessary Resources
+#-----------------------------------------------------------------------
+resource "tls_private_key" "ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+resource "local_file" "ssh_private_key_pem" {
+  content         = tls_private_key.ssh.private_key_pem
+  filename        = "./ssh-key/${var.prefix}-ssh-key.pem"
+  file_permission = "0600"
+}
+
+# Create new random API key to be provisioned in FortiGates.
+resource "random_string" "api_key" {
+  length  = 30
+  special = false
+  numeric = true
+}
+
+# Create new random API key to be provisioned in FortiGates.
+resource "random_string" "vpn_psk" {
+  length  = 30
+  special = false
+  numeric = true
+}
+
+# Create ramdom password for FortiGates
+resource "random_string" "admin_password" {
+  length  = 20
+  special = false
+  numeric = true
+}
+
+// Create storage account if not provided
+resource "random_id" "randomId" {
+  count       = var.storage-account_endpoint == null ? 1 : 0
+  byte_length = 8
+}
+
+resource "azurerm_storage_account" "storageaccount" {
+  count                    = var.storage-account_endpoint == null ? 1 : 0
+  name                     = "stgra${random_id.randomId[count.index].hex}"
+  resource_group_name      = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
+  location                 = var.location
+  account_replication_type = "LRS"
+  account_tier             = "Standard"
+  min_tls_version          = "TLS1_2"
+
+  tags = var.tags
+}
+
+// Create Resource Group if it is null
+resource "azurerm_resource_group" "rg" {
+  count    = var.resource_group_name == null ? 1 : 0
+  name     = "${var.prefix}-rg"
+  location = var.location
+
+  tags = var.tags
+}
