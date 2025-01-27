@@ -17,14 +17,9 @@ module "fgt_config" {
   fgt-active-ni_ips  = module.fgt_vnet.fgt-active-ni_ips
   fgt-passive-ni_ips = module.fgt_vnet.fgt-passive-ni_ips
 
-  # Config for SDN connector
-  # - API calls (optional)
-  #subscription_id     = var.subscription_id
-  #client_id           = var.client_id
-  #client_secret       = var.client_secret
-  #tenant_id           = var.tenant_id
-  #resource_group_name = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
-  # -
+  license_type      = var.license_type
+  fortiflex_token_1 = try(var.fortiflex_tokens[0], "")
+  fortiflex_token_2 = try(var.fortiflex_tokens[1], "")
 
   config_fgcp    = true
   vpc-spoke_cidr = [module.fgt_vnet.subnet_cidrs["bastion"]]

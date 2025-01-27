@@ -82,6 +82,7 @@ data "template_file" "fgt_ha-fgsp-passive-config" {
     mgmt_port     = var.mgmt_port
     mgmt_gw       = cidrhost(var.subnet_cidrs["mgmt"], 1)
     peerip        = var.fgt-active-ni_ips["mgmt"]
+    member_id     = "2"
     master_secret = random_string.fgsp_auto-config_secret.result
     master_ip     = var.fgt-active-ni_ips["mgmt"]
   }

@@ -61,6 +61,12 @@ variable "license_type" {
   default     = "payg"
 }
 
+variable "fortiflex_tokens" {
+  description = "List of FortiFlex licenses tokens"
+  type        = list(string)
+  default     = []
+}
+
 variable "fgt_size" {
   description = "FortiGate instance size"
   type        = string
