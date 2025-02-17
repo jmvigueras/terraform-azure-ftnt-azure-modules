@@ -7,8 +7,8 @@ variable "admin_username" {
 }
 variable "admin_password" {}
 
-# Azure resourcers prefix description
 variable "prefix" {
+  description = "Azure resourcers prefix description"
   type    = string
   default = "terraform"
 }
@@ -56,11 +56,10 @@ variable "fgt_ni_2" {
   default = "mgmt"
 }
 
-//  For HA, choose instance size that support 4 nics at least
-//  Check : https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes
 variable "size" {
+  description = "Check : https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes"
   type    = string
-  default = "Standard_F4"
+  default = "Standard_F4s"
 }
 
 variable "location" {
@@ -68,8 +67,8 @@ variable "location" {
   default = "francecentral"
 }
 
-// Azure resourcers tags
 variable "tags" {
+  description = "Azure resourcers tags"
   type = map(any)
   default = {
     Deploy  = "module-fgt-ha"
