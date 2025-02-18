@@ -17,20 +17,20 @@ variable "admin_password" {
   default = null
 }
 
-// SSH RSA public key for KeyPair if not exists
 variable "rsa-public-key" {
+  description = "SSH RSA public key for KeyPair if not exists"
   type    = string
   default = null
 }
 
-# Azure resourcers prefix description
 variable "prefix" {
+  description = "Azure resourcers prefix description"
   type    = string
   default = "terraform"
 }
 
-// Azure resourcers tags
 variable "tags" {
+  description = "Azure resourcers tags"
   type = map(any)
   default = {
     Deploy  = "module-vms"
@@ -38,33 +38,39 @@ variable "tags" {
   }
 }
 
-//For testing VMs
 variable "vm_size" {
+  description = "For testing VMs"
   type    = string
   default = "Standard_B1ms"
 }
 
-// Subnet ID
 variable "subnet_id" {
+  description = "VM Subnet ID"
   type    = string
   default = null
 }
 
-// Subnet CIDR
 variable "subnet_cidr" {
+  description = "VM Subnet CIDR"
   type    = string
   default = null
 }
 
-// Private IP
+
 variable "ni_ip" {
+  description = "VM private IP"
   type    = string
   default = null
 }
 
-# Azure region
 variable "location" {
+  description = "Azure locatio (default europe-west4)"
   type    = string
-  default = "europe-west4" #Default Region
+  default = "europe-west4"
 }
 
+variable "user_data" {
+  description = "VM custom data"
+  type    = string
+  default = null
+}

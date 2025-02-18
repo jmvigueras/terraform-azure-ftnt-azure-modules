@@ -2,12 +2,7 @@
 //variable "client_id" {}
 //variable "client_secret" {}
 //variable "tenant_id" {}
-
-variable "subscription_id" {
-  description = "Your Azure subscription ID"
-  type        = string
-  default     = null
-}
+//variable "subscription_id" {}
 
 variable "prefix" {
   description = "Prefix to be added to all resources as a prefix"

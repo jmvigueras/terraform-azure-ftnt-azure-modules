@@ -25,3 +25,11 @@ output "subnet_cidrs" {
 output "vnet" {
   value = module.fgt_vnet.vnet
 }
+
+output "public_key_openssh" {
+  value = trimspace(tls_private_key.ssh.public_key_openssh)
+}
+
+output "resource_group_name" {
+  value = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
+}

@@ -37,7 +37,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   size                  = var.vm_size
   network_interface_ids = [azurerm_network_interface.vm_ni.id]
 
-  custom_data = base64encode(file("${path.module}/templates/user-data.tpl"))
+  custom_data = var.user_data != null ? base64encode(var.user_data) : base64encode(file("${path.module}/templates/user-data.tpl"))
 
   os_disk {
     name                 = "${var.prefix}-disk${random_string.random.result}-vm"
