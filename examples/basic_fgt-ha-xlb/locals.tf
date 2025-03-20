@@ -7,5 +7,7 @@ locals {
   backend_probe_port = var.backend_probe_port == null ? "8008" : var.backend_probe_port
 
   admin_password = var.admin_password == null ? random_string.admin_password.result : var.admin_password
+
+  storage_account_endpoint = var.storage-account_endpoint == null ? azurerm_storage_account.storageaccount[0].primary_blob_endpoint : var.storage-account_endpoint
 }
 

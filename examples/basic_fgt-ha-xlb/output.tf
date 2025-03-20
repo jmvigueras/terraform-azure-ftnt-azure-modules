@@ -33,3 +33,7 @@ output "public_key_openssh" {
 output "resource_group_name" {
   value = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
 }
+
+output "storage_account_endpoint" {
+  value = local.storage_account_endpoint
+}

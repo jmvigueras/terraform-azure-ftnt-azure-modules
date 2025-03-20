@@ -34,7 +34,7 @@ module "fgt" {
   location                 = var.location
   resource_group_name      = var.resource_group_name == null ? azurerm_resource_group.rg[0].name : var.resource_group_name
   tags                     = var.tags
-  storage-account_endpoint = var.storage-account_endpoint == null ? azurerm_storage_account.storageaccount[0].primary_blob_endpoint : var.storage-account_endpoint
+  storage-account_endpoint = local.storage_account_endpoint
 
   admin_username = var.admin_username
   admin_password = local.admin_password
@@ -120,8 +120,8 @@ resource "random_string" "vpn_psk" {
 # Create ramdom password for FortiGates
 resource "random_string" "admin_password" {
   length  = 20
-  special = false
-  numeric = true
+  special = true
+  override_special = "/@£$?!^&*()_+"
 }
 
 // Create storage account if not provided
